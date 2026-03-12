@@ -6,8 +6,8 @@ A full stack web application that analyzes URLs for security threats using Googl
 [scam-checker-five.vercel.app](https://scam-checker-five.vercel.app)
 
 ## Tech Stack
-- Backend: Java 21, Spring Boot 4.0
-- Frontend: HTML, CSS, JavaScript
+- Backend: Java 17, Spring Boot 4.0
+- Frontend: HTML
 - Security: Google Safe Browsing API
 - Deployment: Railway (backend), Vercel (frontend)
 
