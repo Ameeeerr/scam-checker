@@ -7,7 +7,7 @@ A full stack web application that analyzes URLs for security threats using Googl
 
 ## Tech Stack
 - Backend: Java 17, Spring Boot 4.0
-- Frontend: HTML
+- Frontend: HTML, CSS, JavaScript
 - Security: Google Safe Browsing API
 - Deployment: Railway (backend), Vercel (frontend)
 
