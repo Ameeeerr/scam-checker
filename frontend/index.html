@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scam Link Checker</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f0f0f;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        p.subtitle {
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: 2px solid #333;
+            background: #111;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus { border-color: #4f46e5; }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover { background: #4338ca; }
+        button:disabled { background: #333; cursor: not-allowed; }
+
+        .result {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.safe {
+            background: #052e16;
+            border: 2px solid #16a34a;
+        }
+
+        .result.dangerous {
+            background: #2d0a0a;
+            border: 2px solid #dc2626;
+        }
+
+        .result h2 {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+
+        .result.safe h2 { color: #16a34a; }
+        .result.dangerous h2 { color: #dc2626; }
+
+        .result p { color: #aaa; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Scam Link Checker</h1>
+        <p class="subtitle">Paste any suspicious URL to check if it's safe</p>
+
+        <input type="text" id="urlInput" placeholder="https://suspicious-link.com" />
+        <button id="checkBtn" onclick="checkUrl()">Check URL</button>
+
+        <div class="result" id="result">
+            <h2 id="resultTitle"></h2>
+            <p id="resultMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        async function checkUrl() {
+            const url = document.getElementById('urlInput').value.trim();
+            const btn = document.getElementById('checkBtn');
+            const result = document.getElementById('result');
+
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Checking...';
+            result.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:8080/api/check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: url
+                });
+
+                const data = await response.json();
+
+                result.style.display = 'block';
+                result.className = 'result ' + (data.result === 'SAFE' ? 'safe' : 'dangerous');
+                document.getElementById('resultTitle').textContent = 
+                    data.result === 'SAFE' ? '✅ Safe' : '⚠️ Dangerous';
+                document.getElementById('resultMessage').textContent = data.message;
+
+            } catch (error) {
+                alert('Error connecting to server. Is Spring Boot running?');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Check URL';
+            }
+        }
+    </script>
+</body>
+</html>
